@@ -9,7 +9,7 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #ffe6eb, #fff6f9);
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -17,10 +17,30 @@
       overflow: hidden;
     }
 
+    .hearts span {
+      position: absolute;
+      display: block;
+      width: 20px;
+      height: 20px;
+      background: pink;
+      animation: animate 10s linear infinite;
+      bottom: -150px;
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+
+    @keyframes animate {
+      0% { transform: translateY(0) scale(0.5); }
+      100% { transform: translateY(-1000px) scale(1); }
+    }
+
     .container {
       text-align: center;
       max-width: 500px;
       padding: 20px;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
     }
 
     .character {
@@ -32,7 +52,13 @@
     .text {
       font-size: 22px;
       margin-bottom: 20px;
-      color: #333;
+      color: #fff;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .buttons button {
@@ -46,25 +72,12 @@
     }
 
     .yes {
-      background-color: #ff7aa2;
+      background-color: #ff4d6d;
       color: white;
     }
 
     .no {
-      background-color: #ddd;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0px); }
-    }
-
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
+      background-color: #eee;
     }
 
     .photo {
@@ -73,19 +86,39 @@
       margin-top: 15px;
       display: none;
     }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
   </style>
 </head>
 
 <body>
 
+  <!-- Floating Hearts -->
+  <div class="hearts">
+    <span style="left:10%"></span>
+    <span style="left:20%"></span>
+    <span style="left:30%"></span>
+    <span style="left:40%"></span>
+    <span style="left:50%"></span>
+    <span style="left:60%"></span>
+    <span style="left:70%"></span>
+    <span style="left:80%"></span>
+  </div>
+
   <!-- Background Music -->
-  <!-- IMPORTANT: Replace 'tu-chahiye.mp3' with your file -->
-  <audio id="bgMusic" src="tu-chahiye.mp3"></audio>
+  <audio id="bgMusic" loop>
+    <source src="tu-chahiye.mp3" type="audio/mpeg">
+  </audio>
 
   <canvas id="confetti"></canvas>
 
   <div class="container">
-    <!-- Cute Character (replace with any gif you like) -->
+
     <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif" class="character" id="character">
 
     <div class="text" id="text">
@@ -98,18 +131,18 @@
       <button class="no" id="noBtn" onclick="sayNo()">No 😢</button>
     </div>
 
-    <!-- Your Photo -->
-    <!-- Replace 'our-photo.jpg' with your image -->
     <img src="our-photo.jpg" class="photo" id="photo">
+
   </div>
 
   <script>
     let step = 0;
     const music = document.getElementById('bgMusic');
 
-    // Play music on first interaction (browser restriction fix)
+    // FIXED MUSIC (user interaction required)
     document.body.addEventListener('click', () => {
-      music.play().catch(() => {});
+      music.volume = 0.5;
+      music.play();
     }, { once: true });
 
     function sayNo() {
@@ -127,13 +160,10 @@
     }
 
     function sayYes() {
-      document.getElementById('text').innerHTML = "Heheheehe ik you love me you beautiful sweet dumbass 😘❤️";
+      document.getElementById('text').innerHTML = "Heheheehe ik you love me ❤️";
       document.getElementById('character').src = "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif";
       document.querySelector('.buttons').style.display = 'none';
-
-      // Show photo
       document.getElementById('photo').style.display = 'block';
-
       startConfetti();
     }
 
@@ -143,17 +173,15 @@
       if (step >= 2) {
         const x = Math.random() * window.innerWidth;
         const y = Math.random() * window.innerHeight;
-
         noBtn.style.position = 'absolute';
         noBtn.style.left = x + 'px';
         noBtn.style.top = y + 'px';
       }
     });
 
-    // Confetti Animation
+    // Confetti
     const canvas = document.getElementById('confetti');
     const ctx = canvas.getContext('2d');
-
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
@@ -173,14 +201,13 @@
 
     function drawConfetti() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       for (let i = 0; i < confetti.length; i++) {
         let c = confetti[i];
         ctx.beginPath();
         ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fillStyle = "white";
         ctx.fill();
       }
-
       updateConfetti();
       requestAnimationFrame(drawConfetti);
     }
@@ -189,7 +216,6 @@
       for (let i = 0; i < confetti.length; i++) {
         let c = confetti[i];
         c.y += Math.cos(c.d) + 2;
-
         if (c.y > canvas.height) {
           c.y = 0;
           c.x = Math.random() * canvas.width;
