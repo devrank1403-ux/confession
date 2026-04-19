@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Just Something For You ❤️</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ffe6eb, #fff6f9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 500px;
+      padding: 20px;
+    }
+
+    .character {
+      width: 120px;
+      margin-bottom: 10px;
+      animation: float 2s infinite ease-in-out;
+    }
+
+    .text {
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .buttons button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .yes {
+      background-color: #ff7aa2;
+      color: white;
+    }
+
+    .no {
+      background-color: #ddd;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    .photo {
+      width: 200px;
+      border-radius: 15px;
+      margin-top: 15px;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Background Music -->
+  <!-- IMPORTANT: Replace 'tu-chahiye.mp3' with your file -->
+  <audio id="bgMusic" src="tu-chahiye.mp3"></audio>
+
+  <canvas id="confetti"></canvas>
+
+  <div class="container">
+    <!-- Cute Character (replace with any gif you like) -->
+    <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif" class="character" id="character">
+
+    <div class="text" id="text">
+      Do you love me? 🥺<br>
+      Is there any chance you might say yes in the future?
+    </div>
+
+    <div class="buttons">
+      <button class="yes" onclick="sayYes()">Yes ❤️</button>
+      <button class="no" id="noBtn" onclick="sayNo()">No 😢</button>
+    </div>
+
+    <!-- Your Photo -->
+    <!-- Replace 'our-photo.jpg' with your image -->
+    <img src="our-photo.jpg" class="photo" id="photo">
+  </div>
+
+  <script>
+    let step = 0;
+    const music = document.getElementById('bgMusic');
+
+    // Play music on first interaction (browser restriction fix)
+    document.body.addEventListener('click', () => {
+      music.play().catch(() => {});
+    }, { once: true });
+
+    function sayNo() {
+      step++;
+      const text = document.getElementById('text');
+      const character = document.getElementById('character');
+
+      if (step === 1) {
+        text.innerHTML = "Soch lo na ek baar aur 🥺";
+        character.src = "https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif";
+      } else if (step === 2) {
+        text.innerHTML = "Areee yaarrr aisa kya karti ho... pyaar karta hu na 🥺";
+        character.src = "https://media.giphy.com/media/d2lcHJTG5Tscg/giphy.gif";
+      }
+    }
+
+    function sayYes() {
+      document.getElementById('text').innerHTML = "Heheheehe ik you love me you beautiful sweet dumbass 😘❤️";
+      document.getElementById('character').src = "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif";
+      document.querySelector('.buttons').style.display = 'none';
+
+      // Show photo
+      document.getElementById('photo').style.display = 'block';
+
+      startConfetti();
+    }
+
+    const noBtn = document.getElementById('noBtn');
+
+    document.addEventListener('mousemove', function() {
+      if (step >= 2) {
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+
+        noBtn.style.position = 'absolute';
+        noBtn.style.left = x + 'px';
+        noBtn.style.top = y + 'px';
+      }
+    });
+
+    // Confetti Animation
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let confetti = [];
+
+    function startConfetti() {
+      for (let i = 0; i < 150; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 6 + 2,
+          d: Math.random() * 50
+        });
+      }
+      drawConfetti();
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < confetti.length; i++) {
+        let c = confetti[i];
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      updateConfetti();
+      requestAnimationFrame(drawConfetti);
+    }
+
+    function updateConfetti() {
+      for (let i = 0; i < confetti.length; i++) {
+        let c = confetti[i];
+        c.y += Math.cos(c.d) + 2;
+
+        if (c.y > canvas.height) {
+          c.y = 0;
+          c.x = Math.random() * canvas.width;
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>
