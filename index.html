@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You ❤️</title>
+
+<style>
+body{
+  margin:0;
+  font-family:'Segoe UI';
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  overflow:hidden;
+}
+
+.container{
+  text-align:center;
+  background:rgba(255,255,255,0.2);
+  padding:20px;
+  border-radius:20px;
+  backdrop-filter:blur(10px);
+}
+
+.text{
+  color:white;
+  font-size:22px;
+  margin-bottom:20px;
+}
+
+button{
+  padding:10px 20px;
+  margin:10px;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+.yes{background:#ff4d6d;color:white;}
+.no{background:#eee;}
+
+.photo{
+  width:220px;
+  border-radius:15px;
+  margin-top:15px;
+  display:none;
+}
+
+#photoText{
+  display:none;
+  color:white;
+  margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+  <source src="tu-chahiye.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+
+<div class="text" id="text">
+Do you love me? 🥺<br>Is there any chance you might say yes?
+</div>
+
+<button class="yes" onclick="yesClick()">Yes ❤️</button>
+<button class="no" id="noBtn" onclick="noClick()">No 😢</button>
+
+<img src="our-photo.jpg" id="photo" class="photo">
+<div id="photoText">Seeeee how good we look together ❤️</div>
+
+</div>
+
+<script>
+let step=0;
+const music=document.getElementById("music");
+
+document.body.addEventListener("click",()=>{
+  music.play();
+},{once:true});
+
+function noClick(){
+  step++;
+  const text=document.getElementById("text");
+
+  if(step==1){
+    text.innerHTML="Soch lo na ek baar aur 🥺";
+  }
+  else if(step==2){
+    text.innerHTML="Areee yaarrr aisa kya karti ho... pyaar karta hu na 🥺";
+  }
+}
+
+function yesClick(){
+  document.getElementById("text").innerHTML="Heheheehe ik you love me you beautiful sweet dumbass 😘❤️";
+  document.getElementById("photo").style.display="block";
+  document.getElementById("photoText").style.display="block";
+}
+
+const noBtn=document.getElementById("noBtn");
+
+document.addEventListener("mousemove",()=>{
+  if(step>=2){
+    noBtn.style.position="absolute";
+    noBtn.style.left=Math.random()*window.innerWidth+"px";
+    noBtn.style.top=Math.random()*window.innerHeight+"px";
+  }
+});
+
+</script>
+
+</body>
+</html>
